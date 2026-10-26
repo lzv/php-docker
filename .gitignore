@@ -1,6 +1,8 @@
 /app/
 /dbdata/*
 !/dbdata/readme.txt
+/emails/*
+!/emails/readme.txt
 /secrets/*
 !/secrets/readme.txt
 
