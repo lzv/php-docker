@@ -1,0 +1,6 @@
+/app/
+/dbdata/*
+!/dbdata/readme.txt
+/secrets/*
+!/secrets/readme.txt
+

@@ -1,0 +1,44 @@
+# --- Системные файлы и Git ---
+**/.git
+**/.gitignore
+**/.dockerignore
+**/docker-compose*
+**/compose.y*ml
+**/compose-*.y*ml
+**/Dockerfile*
+
+# --- Окружение и секреты ---
+**/.env
+**/secrets.dev.yaml
+**/values.dev.yaml
+
+# --- IDE и Редакторы ---
+**/.idea
+**/.vscode
+**/.vs
+**/.project
+**/.classpath
+**/.settings
+**/*.*proj.user
+**/.cache
+/app/nbproject
+
+# --- Специфика Yii 2 ---
+**/runtime/*
+!**/runtime/.gitignore
+**/web/assets/*
+!**/web/assets/.gitignore
+
+# --- Менеджеры пакетов ---
+**/vendor
+**/node_modules
+**/npm-debug.log
+
+# --- Исключения для Composer ---
+!/app/private/composer.json
+!/app/private/composer.lock
+
+# --- Конкретные файлы ---
+/app/readme.txt
+/app/requirements.php
+/app/private/run_composer.sh

@@ -1,0 +1,91 @@
+services:
+
+  proxy:
+    # Документация по образу: https://hub.docker.com/_/traefik
+    image: traefik:v3.7
+    restart: unless-stopped
+    command: 
+      - --providers.docker 
+      - --api.dashboard=true
+    ports:
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`td.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+
+  server:
+    build:
+      context: .
+      target: development
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./emails:/tmp/mails/new
+    secrets:
+      - db-app-password
+    environment:
+      - PASSWORD_FILE_PATH=/run/secrets/db-app-password
+      - DB_HOST=db
+      - DB_NAME=app_db
+      - DB_USER=app_user
+      - IS_DEVELOP=1
+    develop:
+      watch:
+        - path: ./app
+          action: sync
+          target: /var/www/html
+          ignore:
+            - "private/composer.json"
+            - "private/composer.lock"
+        - path: ./app/private/composer.lock
+          action: rebuild
+    labels:
+      traefik.http.routers.server.rule: Host(`localhost`)
+      traefik.http.services.server.loadbalancer.server.port: 80
+
+  db:
+    # Документация по образу: https://hub.docker.com/_/mysql
+    image: mysql:8
+    restart: unless-stopped
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    secrets:
+      - db-root-password
+      - db-app-password
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-root-password
+      - MYSQL_DATABASE=app_db
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD_FILE=/run/secrets/db-app-password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    # Документация по образу: https://hub.docker.com/_/phpmyadmin
+    image: phpmyadmin:5-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - db-root-password
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD_FILE=/run/secrets/db-root-password
+    labels:
+      traefik.http.routers.phpmyadmin.rule: Host(`db.localhost`)
+      traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
+
+secrets:
+  db-root-password:
+    file: ./secrets/db-root-pass
+  db-app-password:
+    file: ./secrets/db-app-pass
