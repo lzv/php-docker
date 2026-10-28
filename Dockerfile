@@ -17,6 +17,8 @@ RUN --mount=type=bind,source=./app/private/composer.json,target=composer.json \
 # Документация по образу: https://github.com/docker-library/docs/tree/master/php
 FROM php:8.5-apache-trixie AS base
 
+# Если pecl нормально заработает, можно будет устанавливать через него. Пример:
+# pecl install --configureoptions 'enable-memcached-json="yes" enable-memcached-igbinary="yes" enable-memcached-msgpack="yes"' memcached
 RUN --mount=type=bind,source=exts/igbinary-3.2.17RC1.tar.gz,target=/tmp/igbinary-3.2.17RC1.tar.gz \
 --mount=type=bind,source=exts/msgpack-php-3.0.1.tar.gz,target=/tmp/msgpack-php-3.0.1.tar.gz \
 --mount=type=bind,source=exts/php-memcached-3.4.0.tar.gz,target=/tmp/php-memcached-3.4.0.tar.gz \
