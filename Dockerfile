@@ -123,6 +123,7 @@ RUN --mount=type=bind,source=exts/xdebug-3.5.3.tar.gz,target=/tmp/xdebug-3.5.3.t
     rm -r /tmp/install_tmp
     docker-php-ext-enable xdebug
 EOF
+COPY ./misc/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Скрипт и каталог для сборки отправленных локально email
 COPY --chmod=755 ./misc/fakesendmail.sh /tmp/mails/fakesendmail.sh

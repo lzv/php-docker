@@ -33,6 +33,8 @@ services:
       - DB_NAME=app_db
       - DB_USER=app_user
       - IS_DEVELOP=1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     develop:
       watch:
         - path: ./app

@@ -35,3 +35,11 @@ docker compose -f compose-dev.yaml watch
 4). phpmyadmin.
 
 Сразу заходит под пользователем root. На продакшене вместо этого запрашивается логин и пароль.
+
+-----
+
+Xdebug может не подключаться к IDE. При использовании на системах с файерволом, например ufw в Ubuntu, нужно выяснить, какой ip у Gateway в сети docker, и разрешить подключения от него, например так:
+sudo ufw allow from 172.18.0.0/16 to any port 9003 comment 'docker xdebug'
+
+Выяснить нужный ip можно так:
+docker inspect id_контейнера | grep Gateway
