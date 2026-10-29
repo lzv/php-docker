@@ -25,6 +25,7 @@ services:
         condition: service_healthy
     volumes:
       - ./emails:/tmp/mails/new
+      - public-images:/var/www/html/public_html/images
     secrets:
       - db-app-password
     environment:
@@ -85,6 +86,9 @@ services:
     labels:
       traefik.http.routers.phpmyadmin.rule: Host(`db.localhost`)
       traefik.http.services.phpmyadmin.loadbalancer.server.port: 80
+
+volumes:
+  public-images:
 
 secrets:
   db-root-password:

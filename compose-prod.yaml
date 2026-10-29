@@ -20,6 +20,8 @@ services:
         condition: service_healthy
     secrets:
       - db-app-password
+    volumes:
+      - public-images:/var/www/html/public_html/images
     environment:
       - PASSWORD_FILE_PATH=/run/secrets/db-app-password
       - DB_HOST=db
@@ -63,6 +65,7 @@ services:
 
 volumes:
   db-data:
+  public-images:
 
 secrets:
   db-app-password:
